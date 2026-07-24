@@ -24,6 +24,31 @@ export default function Home() {
     if (audio) audio.volume = volume;
   }, [volume]);
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const startMusic = async () => {
+      try {
+        await audio.play();
+        setIsPlaying(true);
+        document.removeEventListener("pointerdown", startMusic);
+        document.removeEventListener("keydown", startMusic);
+      } catch {
+        setIsPlaying(false);
+      }
+    };
+
+    void startMusic();
+    document.addEventListener("pointerdown", startMusic, { once: true });
+    document.addEventListener("keydown", startMusic, { once: true });
+
+    return () => {
+      document.removeEventListener("pointerdown", startMusic);
+      document.removeEventListener("keydown", startMusic);
+    };
+  }, []);
+
   const sayYes = () => {
     setMood("yes");
     audioRef.current?.pause();
@@ -291,6 +316,7 @@ export default function Home() {
           <audio
             ref={audioRef}
             src="/assets/song.mp3"
+            autoPlay
             preload="metadata"
             onEnded={() => setIsPlaying(false)}
             onError={() => setAudioMissing(true)}
