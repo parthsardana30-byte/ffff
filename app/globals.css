@@ -94,6 +94,151 @@ a {
   pointer-events: none;
 }
 
+.video-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  padding: 18px;
+  place-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 320ms ease,
+    visibility 320ms ease;
+}
+
+.video-modal.is-visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.video-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  cursor: pointer;
+  background: rgba(66, 43, 62, 0.62);
+  backdrop-filter: blur(9px);
+}
+
+.video-card {
+  position: relative;
+  width: min(100%, 520px);
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 25px;
+  background: rgba(255, 250, 245, 0.97);
+  box-shadow: 0 28px 90px rgba(54, 31, 48, 0.34);
+  transform: translateY(24px) scale(0.96);
+  transition: transform 430ms cubic-bezier(0.2, 0.85, 0.25, 1.15);
+}
+
+.video-modal.is-visible .video-card {
+  transform: translateY(0) scale(1);
+}
+
+.video-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 2px 2px 12px 7px;
+  text-align: left;
+}
+
+.video-heading span {
+  color: #a26780;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.video-heading h2 {
+  margin: 2px 0 0;
+  color: #713f58;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.35rem, 5vw, 1.75rem);
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.video-close {
+  display: grid;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  padding: 0 0 3px;
+  place-items: center;
+  border: 1px solid rgba(157, 85, 112, 0.14);
+  border-radius: 50%;
+  color: #8b536b;
+  cursor: pointer;
+  font-size: 1.55rem;
+  line-height: 1;
+  background: #f4e6ed;
+}
+
+.video-close:focus-visible {
+  outline: 3px solid #7554a7;
+  outline-offset: 3px;
+}
+
+.sorry-video,
+.video-placeholder {
+  display: block;
+  width: 100%;
+  aspect-ratio: 9 / 13;
+  max-height: min(68vh, 620px);
+  border-radius: 17px;
+  object-fit: contain;
+  background: #332732;
+}
+
+.video-placeholder {
+  display: grid;
+  align-content: center;
+  padding: 30px;
+  color: #684d5d;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.8), transparent 36%),
+    linear-gradient(145deg, #f7dce6, #e7def5);
+}
+
+.video-placeholder span {
+  font-size: 3rem;
+}
+
+.video-placeholder strong {
+  margin-top: 10px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.3rem;
+}
+
+.video-placeholder p {
+  margin: 8px 0 0;
+  font-size: 0.83rem;
+  line-height: 1.5;
+}
+
+.video-placeholder code {
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: #7e4260;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.video-caption {
+  margin: 11px 4px 1px;
+  color: #875b70;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
 .floating-heart {
   --size: calc(16px + (var(--i) % 4) * 7px);
   position: absolute;
@@ -595,6 +740,21 @@ input[type="range"]:focus-visible {
 
   .tiny-note {
     margin-top: 9px;
+  }
+
+  .video-modal {
+    padding: 10px;
+  }
+
+  .video-card {
+    padding: 10px;
+    border-radius: 21px;
+  }
+
+  .sorry-video,
+  .video-placeholder {
+    max-height: 69dvh;
+    border-radius: 14px;
   }
 }
 

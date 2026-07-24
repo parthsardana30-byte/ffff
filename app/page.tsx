@@ -14,7 +14,10 @@ export default function Home() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.55);
   const [audioMissing, setAudioMissing] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
+  const [videoMissing, setVideoMissing] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -24,18 +27,25 @@ export default function Home() {
   const sayYes = () => {
     setMood("yes");
     audioRef.current?.pause();
+    videoRef.current?.pause();
     setIsPlaying(false);
+    setShowVideo(false);
   };
 
   const sayNo = async () => {
     setMood("no");
     setNoCount((count) => count + 1);
-
+    audioRef.current?.pause();
+    setIsPlaying(false);
+    setShowVideo(true);
+    const video = videoRef.current;
     try {
-      await audioRef.current?.play();
-      setIsPlaying(true);
+      if (video) {
+        video.currentTime = 0;
+        await video.play();
+      }
     } catch {
-      setIsPlaying(false);
+      // Native video controls remain available if autoplay is blocked.
     }
   };
 
@@ -132,6 +142,70 @@ export default function Home() {
           </div>
         </>
       )}
+
+      <div
+        className={`video-modal ${showVideo ? "is-visible" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="video-title"
+        aria-hidden={!showVideo}
+      >
+        <button
+          className="video-backdrop"
+          type="button"
+          aria-label="Video band karein"
+          tabIndex={showVideo ? 0 : -1}
+          onClick={() => {
+            videoRef.current?.pause();
+            setShowVideo(false);
+          }}
+        />
+        <div className="video-card">
+          <div className="video-heading">
+            <div>
+              <span>ek aur chhoti si request…</span>
+              <h2 id="video-title">Please maan jao na 🥺</h2>
+            </div>
+            <button
+              className="video-close"
+              type="button"
+              aria-label="Video band karein"
+              tabIndex={showVideo ? 0 : -1}
+              onClick={() => {
+                videoRef.current?.pause();
+                setShowVideo(false);
+              }}
+            >
+              ×
+            </button>
+          </div>
+          {videoMissing ? (
+            <div className="video-placeholder">
+              <span aria-hidden="true">🎥🥺</span>
+              <strong>Bas aapki video ka wait hai</strong>
+              <p>
+                Apni video ko <code>public/assets/video.mp4</code> naam se add
+                karein.
+              </p>
+            </div>
+          ) : (
+            <video
+              ref={videoRef}
+              className="sorry-video"
+              src="/assets/video.mp4"
+              controls
+              playsInline
+              preload="metadata"
+              onError={() => setVideoMissing(true)}
+            >
+              Aapka browser video playback support nahi karta.
+            </video>
+          )}
+          <p className="video-caption">
+            Gussa valid hai… par ek baar meri baat sun lo na ❤️
+          </p>
+        </div>
+      </div>
 
       <section className="sorry-card" aria-labelledby="page-title">
         <div className="card-ribbon" aria-hidden="true">
